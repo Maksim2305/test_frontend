@@ -9,7 +9,8 @@
       <!-- TODO используйте v-autocomplete для выбора пользователя -->
       <!-- 3. Редактирование пользователя -->
       <!-- TODO добавить возможность редактировать данные пользователя -->
-      <div>
+      <div class="app-container">
+        <div v-if="!loading">
         <v-autocomplete
           v-if="usersList.length"
           class="pa-4 user-autocomplete"
@@ -25,6 +26,14 @@
         <div v-else class="text-center">Пользователи не найдены</div>
         <UserCard :user="selectedUser" v-if="selectedUser" />
         <div v-else class="text-center">Пользователь не выбран</div>
+      </div>
+      <div v-else>
+        <v-progress-circular
+          :size="50"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+      </div>
       </div>
     </v-main>
   </v-app>
@@ -68,6 +77,13 @@ export default {
 </script>
 
 <style scoped>
+.app-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 .user-autocomplete {
   max-width: 500px;
   margin: auto;

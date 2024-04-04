@@ -17,87 +17,87 @@
       </v-toolbar>
       <v-container>
         <v-form ref="formRef" v-model="valid">
-        <v-text-field
-          label="Имя"
-          outlined
-          dense
-          :autofocus="true"
-          v-model="selectedUser.firstname"
-          :rules="[rules.required]"
-        ></v-text-field>
+          <v-text-field
+            label="Имя"
+            outlined
+            dense
+            :autofocus="true"
+            v-model="selectedUser.firstname"
+            :rules="[rules.required]"
+          ></v-text-field>
 
-        <v-text-field
-          label="Фамилия"
-          outlined
-          dense
-          v-model="selectedUser.lastname"
-          :rules="[rules.required]"
-        ></v-text-field>
+          <v-text-field
+            label="Фамилия"
+            outlined
+            dense
+            v-model="selectedUser.lastname"
+            :rules="[rules.required]"
+          ></v-text-field>
 
-        <v-text-field
-          label="Email"
-          outlined
-          dense
-          v-model="selectedUser.email"
-          type="email"
-          :rules="[rules.required]"
-        ></v-text-field>
+          <v-text-field
+            label="Email"
+            outlined
+            dense
+            v-model="selectedUser.email"
+            type="email"
+            :rules="[rules.required, rules.emailCheck]"
+          ></v-text-field>
 
-        <v-text-field
-          label="Телефон"
-          outlined
-          dense
-          v-model="selectedUser.phone"
-          :rules="[rules.required]"
-        ></v-text-field>
-        <v-radio-group v-model="selectedUser.gender">
-          <v-radio label="Мужской" value="male"></v-radio>
-          <v-radio label="Женский" value="female"></v-radio>
-        </v-radio-group>
+          <v-text-field
+            label="Телефон"
+            outlined
+            dense
+            v-model="selectedUser.phone"
+            :rules="[rules.required, rules.phoneCheck]"
+          ></v-text-field>
+          <v-radio-group v-model="selectedUser.gender">
+            <v-radio label="Мужской" value="male"></v-radio>
+            <v-radio label="Женский" value="female"></v-radio>
+          </v-radio-group>
 
-        <v-text-field
-          label="Сайт"
-          outlined
-          dense
-          v-model="selectedUser.website"
-          :rules="[rules.required]"
-        ></v-text-field>
-        <v-text-field
-          label="Дата рождения"
-          outlined
-          dense
-          v-model="selectedUser.birthday"
-          :rules="[rules.required]"
-        ></v-text-field>
-        <v-text-field
-          label="Страна"
-          outlined
-          dense
-          v-model="selectedUser.address.country"
-          :rules="[rules.required]"
-        ></v-text-field>
-        <v-text-field
-          label="Город"
-          outlined
-          dense
-          v-model="selectedUser.address.city"
-          :rules="[rules.required]"
-        ></v-text-field>
-        <v-text-field
-          label="Улица"
-          outlined
-          dense
-          v-model="selectedUser.address.street"
-          :rules="[rules.required]"
-        ></v-text-field>
-        <v-text-field
-          label="zip"
-          outlined
-          dense
-          v-model="selectedUser.address.zipcode"
-          :rules="[rules.required]"
-        ></v-text-field>
-      </v-form>
+          <v-text-field
+            label="Сайт"
+            outlined
+            dense
+            v-model="selectedUser.website"
+            :rules="[rules.required]"
+          ></v-text-field>
+          <v-text-field
+            label="Дата рождения"
+            outlined
+            dense
+            v-model="selectedUser.birthday"
+            :rules="[rules.required, rules.dateCheck]"
+          ></v-text-field>
+          <v-text-field
+            label="Страна"
+            outlined
+            dense
+            v-model="selectedUser.address.country"
+            :rules="[rules.required]"
+          ></v-text-field>
+          <v-text-field
+            label="Город"
+            outlined
+            dense
+            v-model="selectedUser.address.city"
+            :rules="[rules.required]"
+          ></v-text-field>
+          <v-text-field
+            label="Улица"
+            outlined
+            dense
+            v-model="selectedUser.address.street"
+            :rules="[rules.required]"
+          ></v-text-field>
+          <v-text-field
+            label="zip"
+            outlined
+            dense
+            v-model="selectedUser.address.zipcode"
+            :rules="[rules.required, rules.numberCheck]"
+          ></v-text-field>
+        </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn depressed outlined @click="save"> Сохранить </v-btn>
@@ -124,6 +124,30 @@ export default {
       valid: true,
       rules: {
         required: (value) => !!value || "Обязательное поле",
+        phoneCheck(value) {
+          if (/^\+(?:[0-9] ?){6,14}[0-9]$/.test(value)) {
+            return true;
+          }
+          return "Неверный формат номера";
+        },
+        emailCheck(value) {
+          if (/.+@.+\..+/.test(value)) {
+            return true;
+          }
+          return "Неверный email";
+        },
+        numberCheck(value) {
+          if (/^[0-9]*$/.test(value)) {
+            return true;
+          }
+          return "Только целые числа";
+        },
+        dateCheck(value) {
+          if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            return true;
+          }
+          return "Дата должна быть в формате yyyy-mm-dd";
+        },
       },
     };
   },
@@ -138,10 +162,10 @@ export default {
   methods: {
     save() {
       if (this.$refs['formRef'].validate()) {
-        // put запрос
-        this.close();
+      // put запрос
+      this.close();
       }
-     
+
     },
     close() {
       this.dialog = false;
